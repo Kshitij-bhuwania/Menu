@@ -15,18 +15,18 @@
         .btn-add { background: #2ed573; color: white; border: none; padding: 8px 14px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px; }
         .btn-add:hover { background: #26af5f; }
         .checkout-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: white; padding: 15px; box-shadow: 0 -4px 12px rgba(0,0,0,0.05); text-align: center; box-sizing: border-box; }
-        .btn-checkout { background: #3182ce; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: 600; font-size: 16px; cursor: pointer; width: 100%; max-width: 560px; }
+        .btn-checkout { background: #3182ce; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: 600; font-size: 16px; cursor: pointer; width: 100%; max-width: 560px; transition: background 0.2s; }
+        .btn-checkout:hover { background: #2b6cb0; }
     </style>
 </head>
 <body>
 
- <div class="container" style="padding-bottom: 80px;">
+  <div class="container" style="padding-bottom: 90px;">
         <h2>🍽️ Restaurant Menu</h2>
         <div id="customerMenuDisplay">Loading live menu...</div>
     </div>
-
- <div class="checkout-bar">
-        <button class="btn-checkout" onclick="goToCheckout()">Proceed to Checkout 🛒</button>
+  <div class="checkout-bar">
+        <button class="btn-checkout" onclick="goToCheckout()" id="checkoutBtnText">Proceed to Checkout 🛒 (0 items)</button>
     </div>
 
 <script>
@@ -80,6 +80,7 @@
         });
 
         container.innerHTML = html;
+        updateCartCount();
     }
 
     function addToCart(id, name, price) {
@@ -88,14 +89,30 @@
         }
         cart[id].quantity += 1;
         localStorage.setItem(cartKey, JSON.stringify(cart));
-        alert(`${name} added to cart!`);
+        updateCartCount();
+    }
+
+    function updateCartCount() {
+        let totalItems = 0;
+        for (let id in cart) {
+            totalItems += cart[id].quantity;
+        }
+        document.getElementById('checkoutBtnText').innerText = `Proceed to Checkout 🛒 (${totalItems} items)`;
     }
 
     function goToCheckout() {
-        window.location.href = 'checkout.html';
+        let totalItems = 0;
+        for (let id in cart) {
+            totalItems += cart[id].quantity;
+        }
+        if (totalItems === 0) {
+            alert('Your cart is empty! Add some items before proceeding.');
+            return;
+        }
+        window.location.href = 'https://kshitij-bhuwania.github.io/Checkout/';
     }
 
-    // Auto-refresh the menu every 3 seconds so changes made on the admin page instantly show up on customer phones
+    // Auto-refresh the menu every 3 seconds to keep it synced with admin changes
     setInterval(loadCustomerMenu, 3000);
     loadCustomerMenu();
 </script>
