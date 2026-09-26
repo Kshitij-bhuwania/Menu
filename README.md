@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restaurant Menu</title>
+    <style>
+        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; margin: 0; background: #f4f6f9; color: #2d3748; display: flex; justify-content: center; }
+        .main-container { width: 100%; max-width: 950px; padding: 20px 15px 80px 15px; box-sizing: border-box; min-height: 100vh; display: flex; flex-direction: column; justify-content: space-between; }
+        
+        h2 { font-weight: 600; color: #1a202c; margin-top: 0; font-size: 22px; }
+        .items-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .item-card { background: white; border-radius: 12px; padding: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); text-align: center; border: 1px solid #edf2f7; display: flex; flex-direction: column; justify-content: space-between; }
+        .item-card img { width: 100%; height: 110px; object-fit: cover; border-radius: 8px; }
+        .item-card h4 { margin: 10px 0 4px 0; color: #2d3748; font-size: 15px; }
+        .item-card p { color: #ff4757; font-weight: 600; margin: 0 0 10px 0; font-size: 14px; }
+        
+        button { background: #ff4757; color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 13px; transition: background 0.2s; }
+        button:hover { background: #ff6b81; }
+        
+        .qty-inline { display: flex; align-items: center; justify-content: center; gap: 8px; background: #edf2f7; padding: 4px 8px; border-radius: 8px; font-weight: 600; font-size: 13px; width: 100%; box-sizing: border-box; }
+        .qty-inline button { background: #2d3748; padding: 2px 6px; font-size: 11px; }
+        
+        /* Category selection bar */
+        .category-bar { background: #fff; padding: 14px 18px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); border: 1px solid #edf2f7; display: flex; align-items: center; gap: 12px; margin-top: 20px; }
+        .category-select { padding: 8px 12px; border-radius: 8px; border: 1px solid #cbd5e0; font-size: 14px; outline: none; background: #fff; cursor: pointer; flex-grow: 1; }
+        
+        /* Sleek Floating Sticky "Go to Cart" Widget in Bottom-Right Corner for Mobile */
+        .floating-cart-widget {
+            position: fixed;
+            right: 20px;
+            bottom: 25px;
+            z-index: 1000;
+        }
+        .cart-btn-floating {
+            background: #2ed573;
+            color: white;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(46, 213, 115, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: transform 0.2s, background 0.2s;
+        }
+        .cart-btn-floating:active {
+            transform: scale(0.96);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-container">
+        <div>
+            <h2>Explore Our Menu</h2>
+            <div id="itemsGrid" class="items-grid"></div>
+        </div>
+
+        <!-- Category Dropdown Filter Bar -->
+        <div class="category-bar">
+            <label for="categoryDropdown" style="font-size: 14px;"><strong>Category:</strong></label>
+            <select id="categoryDropdown" class="category-select" onchange="filterMenu(this.value)">
+                <option value="All">All Categories</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Sleek Bottom-Right Floating Cart Button for Mobile Users -->
+    <div class="floating-cart-widget">
+        <button class="cart-btn-floating" onclick="goToCheckout()">
+            <span>🛒 View Cart</span>
+            <span id="cartBadge" style="background: rgba(0,0,0,0.2); padding: 2px 8px; border-radius: 15px; font-size: 12px;">0 items</span>
+        </button>
+    </div>
+
+<script>
+    const phone = localStorage.getItem('activeCustomerPhone');
+    if (!phone) window.location.href = 'login.html';
+
+    let cartKey = 'cart_' + phone;
+    let cart = JSON.parse(localStorage.getItem(cartKey) || '{}');
+
+    function loadCategories() {
+        const categories = JSON.parse(localStorage.getItem('categories') || '[]');
+        const dropdown = document.getElementById('categoryDropdown');
+        dropdown.innerHTML = '<option value="All">All Categories</option>';
+        categories.forEach(cat => {
+            dropdown.innerHTML += `<option value="${cat}">${cat}</option>`;
+        });
+    }
+
+    function loadMenu(selectedCategory = 'All') {
+        const items = JSON.parse(localStorage.getItem('menuItems') || '[]');
+        const grid = document.getElementById('itemsGrid');
+        grid.innerHTML = '';
+
+        const filtered = selectedCategory === 'All' ? items : items.filter(i => i.category === selectedCategory);
+        if (filtered.length === 0) {
+            grid.innerHTML = '<p style="color: #718096; grid-column: 1/-1; text-align: center;">No items found in this category.</p>';
+            return;
+        }
+
+        filtered.forEach(item => {
+            let currentQty = cart[item.id] ? cart[item.id].quantity : 0;
+            let actionHtml = '';
+
+            if (currentQty === 0) {
+                actionHtml = `<button onclick="updateCartItem('${item.id}', '${item.name}', ${item.price}, 1)">Add to Cart</button>`;
+            } else {
+                actionHtml = `
+                    <div class="qty-inline">
+                        <button onclick="updateCartItem('${item.id}', '${item.name}', ${item.price}, -1)">-</button>
+                        <span>${currentQty}</span>
+                        <button onclick="updateCartItem('${item.id}', '${item.name}', ${item.price}, 1)">+</button>
+                    </div>
+                `;
+            }
+
+            grid.innerHTML += `
+                <div class="item-card">
+                    <div>
+                        <img src="${item.image}" alt="${item.name}">
+                        <h4>${item.name}</h4>
+                        <p>₹${item.price}</p>
+                    </div>
+                    <div>${actionHtml}</div>
+                </div>
+            `;
+        });
+    }
+
+    function filterMenu(category) { loadMenu(category); }
+
+    function updateCartItem(id, name, price, change) {
+        if (!cart[id]) {
+            if (change > 0) cart[id] = { id, name, price, quantity: 1 };
+        } else {
+            cart[id].quantity += change;
+            if (cart[id].quantity <= 0) delete cart[id];
+        }
+
+        localStorage.setItem(cartKey, JSON.stringify(cart));
+        updateCartBadge();
+        loadMenu(document.getElementById('categoryDropdown').value);
+    }
+
+    function updateCartBadge() {
+        let totalItemsCount = Object.values(cart).reduce((sum, i) => sum + i.quantity, 0);
+        document.getElementById('cartBadge').innerText = totalItemsCount + (totalItemsCount === 1 ? ' item' : ' items');
+    }
+
+    function goToCheckout() {
+        let totalItemsCount = Object.values(cart).reduce((sum, i) => sum + i.quantity, 0);
+        if (totalItemsCount === 0) {
+            alert('Your cart is empty! Please add items first.');
+            return;
+        }
+        window.location.href = 'checkout.html';
+    }
+
+    loadCategories();
+    loadMenu();
+    updateCartBadge();
+</script>
+</body>
+</html>
