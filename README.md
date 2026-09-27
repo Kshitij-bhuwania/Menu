@@ -1,4 +1,3 @@
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -10,6 +9,8 @@
         h2 { color: #1a202c; text-align: center; }
         .category-title { font-size: 18px; font-weight: 600; color: #2b6cb0; margin: 20px 0 10px 0; border-bottom: 2px solid #bee3f8; padding-bottom: 4px; }
         .menu-card { background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border: 1px solid #edf2f7; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .item-details { display: flex; align-items: center; gap: 12px; }
+        .item-img { width: 50px; height: 50px; object-fit: cover; border-radius: 8px; border: 1px solid #e2e8f0; flex-shrink: 0; }
         .item-info { font-size: 15px; font-weight: 600; color: #2d3748; }
         .item-price { color: #718096; font-size: 14px; margin-top: 4px; }
         .btn-add { background: #2ed573; color: white; border: none; padding: 8px 14px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px; }
@@ -95,11 +96,17 @@
                         `;
                     }
 
+                    // Render image tag only if an image URL is provided in the admin panel
+                    let imgHtml = item.image ? `<img src="${item.image}" alt="${item.name}" class="item-img">` : '';
+
                     html += `
                         <div class="menu-card">
-                            <div>
-                                <div class="item-info">${item.name}</div>
-                                <div class="item-price">₹${item.price}</div>
+                            <div class="item-details">
+                                ${imgHtml}
+                                <div>
+                                    <div class="item-info">${item.name}</div>
+                                    <div class="item-price">₹${item.price}</div>
+                                </div>
                             </div>
                             <div>${actionHtml}</div>
                         </div>
