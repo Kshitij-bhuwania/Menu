@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Our Menu</title>
     <style>
-        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #f4f6f9; padding: 20px; color: #2d3748; display: flex; justify-content: center; margin: 0; }
+        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: white; padding: 20px; color: #2d3748; display: flex; justify-content: center; margin: 0; }
         .container { width: 100%; max-width: 600px; }
         h2 { color: #1a202c; text-align: center; }
         .category-title { font-size: 18px; font-weight: 600; color: #2b6cb0; margin: 20px 0 10px 0; border-bottom: 2px solid #bee3f8; padding-bottom: 4px; }
@@ -25,7 +25,6 @@
 </head>
 <body>
 <div style="text-align: center;">
-  <a href="https://i.postimg.cc/SsSZBQ9q/1000037254-removebg-preview.png">
     <img src="https://i.postimg.cc/SsSZBQ9q/1000037254-removebg-preview.png" alt="Description" style="width: 300px;">
   </a>
 </div>
