@@ -4,39 +4,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Our Menu</title>
     <style>
-        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: white; padding: 20px; color: #2d3748; display: flex; justify-content: center; margin: 0; }
+        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #f9f9f9; padding: 20px; color: #2d3748; display: flex; justify-content: center; margin: 0; }
         .container { width: 100%; max-width: 600px; }
         h2 { color: #1a202c; text-align: center; }
-        .category-title { font-size: 18px; font-weight: 600; color: #2b6cb0; margin: 20px 0 10px 0; border-bottom: 2px solid #bee3f8; padding-bottom: 4px; }
-        .menu-card { background: white; padding: 15px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.03); border: 1px solid #edf2f7; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
-        .item-details { display: flex; align-items: center; gap: 12px; }
-        .item-img { width: 50px; height: 50px; object-fit: cover; border-radius: 8px; border: 1px solid #e2e8f0; flex-shrink: 0; }
-        .item-info { font-size: 15px; font-weight: 600; color: #2d3748; }
-        .item-price { color: #718096; font-size: 14px; margin-top: 4px; }
-        .btn-add { background: #2ed573; color: white; border: none; padding: 8px 14px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 13px; }
+        .category-title { font-size: 18px; font-weight: 600; color: #2b6cb0; margin: 25px 0 12px 0; border-bottom: 2px solid #bee3f8; padding-bottom: 4px; }
+        
+        /* Grid layout to nicely display items with top images */
+        .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 15px; }
+        .menu-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid #edf2f7; display: flex; flex-direction: column; text-align: center; padding-bottom: 15px; }
+        
+        .item-img { width: 100%; height: 160px; object-fit: cover; background: #edf2f7; }
+        .item-content { padding: 12px 15px; display: flex; flex-direction: column; align-items: center; flex-grow: 1; justify-content: space-between; gap: 10px; }
+        
+        .item-info { font-size: 16px; font-weight: 600; color: #2d3748; }
+        .item-price { color: #718096; font-size: 14px; margin-top: 2px; }
+        
+        .btn-add { background: #2ed573; color: white; border: none; padding: 8px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; font-size: 14px; width: 100%; }
         .btn-add:hover { background: #26af5f; }
-        .qty-control { display: flex; align-items: center; background: #edf2f7; border-radius: 6px; overflow: hidden; border: 1px solid #cbd5e0; }
-        .qty-btn { background: #e2e8f0; border: none; padding: 6px 12px; font-weight: bold; cursor: pointer; color: #2d3748; font-size: 14px; }
+        
+        .qty-control { display: flex; align-items: center; justify-content: center; background: #edf2f7; border-radius: 6px; overflow: hidden; border: 1px solid #cbd5e0; width: 100%; }
+        .qty-btn { background: #e2e8f0; border: none; padding: 6px 16px; font-weight: bold; cursor: pointer; color: #2d3748; font-size: 15px; }
         .qty-btn:hover { background: #cbd5e0; }
-        .qty-display { padding: 0 12px; font-weight: 600; font-size: 14px; color: #1a202c; min-width: 15px; text-align: center; }
+        .qty-display { padding: 0 16px; font-weight: 600; font-size: 14px; color: #1a202c; }
+
         .checkout-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: white; padding: 15px; box-shadow: 0 -4px 12px rgba(0,0,0,0.05); text-align: center; box-sizing: border-box; }
         .btn-checkout { background: #3182ce; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: 600; font-size: 16px; cursor: pointer; width: 100%; max-width: 560px; transition: background 0.2s; }
         .btn-checkout:hover { background: #2b6cb0; }
     </style>
 </head>
 <body>
-<div style="text-align: center;">
-    <img src="https://i.postimg.cc/SsSZBQ9q/1000037254-removebg-preview.png" alt="Description" style="width: 300px;">
-</div>
-  <br>
+  <div style="text-align: center; width: 100%;">
+      <img src="https://i.postimg.cc/SsSZBQ9q/1000037254-removebg-preview.png" alt="Description" style="width: 300px;">
+  </div>
   <br><br><br>
+  
   <div class="container" style="padding-bottom: 90px;">
         <h2>🍽️ Restaurant Menu</h2>
         <div id="customerMenuDisplay">Loading live menu...</div>
   </div>
+
   <div class="checkout-bar">
        <button class="btn-checkout" onclick="goToCheckout()" id="checkoutBtnText">Proceed to Checkout 🛒 (0 items)</button>
-    </div>
+  </div>
 
 <script>
     const FIREBASE_URL = "https://test-d34cf-default-rtdb.europe-west1.firebasedatabase.app";
@@ -79,6 +88,7 @@
             if (!cat.items || cat.items.length === 0) {
                 html += `<p style="font-size:13px; color:#a0aec0; margin: 5px 0;">No items available in this category.</p>`;
             } else {
+                html += `<div class="menu-grid">`;
                 cat.items.forEach((item, itemIndex) => {
                     let uniqueId = `${catIndex}_${itemIndex}`;
                     let qty = cart[uniqueId] ? cart[uniqueId].quantity : 0;
@@ -96,22 +106,23 @@
                         `;
                     }
 
-                    // Render image tag only if an image URL is provided in the admin panel
-                    let imgHtml = item.image ? `<img src="${item.image}" alt="${item.name}" class="item-img">` : '';
+                    // Fallback or dynamic image display at the top of the card
+                    let imgHtml = item.image ? `<img src="${item.image}" alt="${item.name}" class="item-img">` : `<div class="item-img" style="display:flex; align-items:center; justify-content:center; color:#a0aec0; font-size:12px;">No Image</div>`;
 
                     html += `
                         <div class="menu-card">
-                            <div class="item-details">
-                                ${imgHtml}
+                            ${imgHtml}
+                            <div class="item-content">
                                 <div>
                                     <div class="item-info">${item.name}</div>
                                     <div class="item-price">₹${item.price}</div>
                                 </div>
+                                <div style="width: 100%;">${actionHtml}</div>
                             </div>
-                            <div>${actionHtml}</div>
                         </div>
                     `;
                 });
+                html += `</div>`;
             }
         });
 
@@ -153,7 +164,7 @@
         window.location.href = 'https://kshitij-bhuwania.github.io/Checkout/';
     }
 
-    // Auto-refresh the menu every 3 seconds to sync seamlessly with admin changes
+    // Auto-refresh every 3 seconds to stay synced with admin changes
     setInterval(() => {
         fetch(`${FIREBASE_URL}/menu.json`)
             .then(res => res.json())
