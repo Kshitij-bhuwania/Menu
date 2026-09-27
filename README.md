@@ -24,7 +24,13 @@
     </style>
 </head>
 <body>
-
+<div style="text-align: center;">
+  <a href="https://i.postimg.cc/SsSZBQ9q/1000037254-removebg-preview.png">
+    <img src="https://i.postimg.cc/SsSZBQ9q/1000037254-removebg-preview.png" alt="Description" style="width: 300px;">
+  </a>
+</div>
+  <br>
+  <br><br><br>
   <div class="container" style="padding-bottom: 90px;">
         <h2>🍽️ Restaurant Menu</h2>
         <div id="customerMenuDisplay">Loading live menu...</div>
