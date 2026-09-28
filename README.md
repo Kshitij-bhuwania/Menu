@@ -95,7 +95,7 @@
 
     function updateCategoryDropdown() {
         const dropdown = document.getElementById('cornerCategoryDropdown');
-        let optionsHtml = '<option value="">📂 Categories</option>';
+        let optionsHtml = '<option value="">Menu 📖</option>';
 
         currentMenuData.categories.forEach((cat, index) => {
             optionsHtml += `<option value="cat_${index}">${cat.name}</option>`;
