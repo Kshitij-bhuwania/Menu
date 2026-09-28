@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,8 +8,13 @@
         body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #f9f9f9; padding: 20px; color: #2d3748; display: flex; justify-content: center; margin: 0; }
         .container { width: 100%; max-width: 600px; }
         h2 { color: #1a202c; text-align: center; }
-        .category-title { font-size: 18px; font-weight: 600; color: #2b6cb0; margin: 25px 0 12px 0; border-bottom: 2px solid #bee3f8; padding-bottom: 4px; }
+        .category-title { font-size: 18px; font-weight: 600; color: #2b6cb0; margin: 25px 0 12px 0; border-bottom: 2px solid #bee3f8; padding-bottom: 4px; scroll-margin-top: 20px; }
         
+        /* Fixed Corner Category Dropdown */
+        .category-dropdown-container { position: fixed; top: 15px; right: 15px; z-index: 1000; }
+        .category-dropdown { background: white; border: 1px solid #cbd5e0; padding: 8px 12px; border-radius: 8px; font-size: 13px; font-weight: 600; color: #2b6cb0; box-shadow: 0 4px 12px rgba(0,0,0,0.08); cursor: pointer; outline: none; }
+        .category-dropdown:hover { background: #f7fafc; }
+
         /* Grid layout to nicely display items with top images */
         .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 15px; }
         .menu-card { background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04); border: 1px solid #edf2f7; display: flex; flex-direction: column; text-align: center; padding-bottom: 15px; }
@@ -27,12 +33,20 @@
         .qty-btn:hover { background: #cbd5e0; }
         .qty-display { padding: 0 16px; font-weight: 600; font-size: 14px; color: #1a202c; }
 
-        .checkout-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: white; padding: 15px; box-shadow: 0 -4px 12px rgba(0,0,0,0.05); text-align: center; box-sizing: border-box; }
+        .checkout-bar { position: fixed; bottom: 0; left: 0; width: 100%; background: white; padding: 15px; box-shadow: 0 -4px 12px rgba(0,0,0,0.05); text-align: center; box-sizing: border-box; z-index: 999; }
         .btn-checkout { background: #3182ce; color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: 600; font-size: 16px; cursor: pointer; width: 100%; max-width: 560px; transition: background 0.2s; }
         .btn-checkout:hover { background: #2b6cb0; }
     </style>
 </head>
 <body>
+
+  <!-- Fixed Corner Category Dropdown -->
+  <div class="category-dropdown-container">
+      <select id="cornerCategoryDropdown" class="category-dropdown" onchange="scrollToCategory(this.value)">
+          <option value="">📂 Categories</option>
+      </select>
+  </div>
+
   <div style="text-align: center; width: 100%;">
       <img src="https://i.postimg.cc/SsSZBQ9q/1000037254-removebg-preview.png" alt="Description" style="width: 300px;">
   </div>
@@ -76,6 +90,28 @@
         }
 
         renderMenuUI();
+        updateCategoryDropdown();
+    }
+
+    function updateCategoryDropdown() {
+        const dropdown = document.getElementById('cornerCategoryDropdown');
+        let optionsHtml = '<option value="">📂 Categories</option>';
+
+        currentMenuData.categories.forEach((cat, index) => {
+            optionsHtml += `<option value="cat_${index}">${cat.name}</option>`;
+        });
+
+        dropdown.innerHTML = optionsHtml;
+    }
+
+    function scrollToCategory(categoryElementId) {
+        if (!categoryElementId) return;
+        const targetElement = document.getElementById(categoryElementId);
+        if (targetElement) {
+            targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        // Reset dropdown back to default title after selection
+        document.getElementById('cornerCategoryDropdown').value = "";
     }
 
     function renderMenuUI() {
@@ -83,7 +119,7 @@
         let html = '';
 
         currentMenuData.categories.forEach((cat, catIndex) => {
-            html += `<div class="category-title">${cat.name}</div>`;
+            html += `<div id="cat_${catIndex}" class="category-title">${cat.name}</div>`;
 
             if (!cat.items || cat.items.length === 0) {
                 html += `<p style="font-size:13px; color:#a0aec0; margin: 5px 0;">No items available in this category.</p>`;
@@ -106,7 +142,6 @@
                         `;
                     }
 
-                    // Fallback or dynamic image display at the top of the card
                     let imgHtml = item.image ? `<img src="${item.image}" alt="${item.name}" class="item-img">` : `<div class="item-img" style="display:flex; align-items:center; justify-content:center; color:#a0aec0; font-size:12px;">No Image</div>`;
 
                     html += `
@@ -172,6 +207,7 @@
                 if (data && data.categories) {
                     currentMenuData = data;
                     renderMenuUI();
+                    updateCategoryDropdown();
                 }
             }).catch(() => {});
     }, 3000);
