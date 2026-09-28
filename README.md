@@ -43,7 +43,7 @@
   <!-- Fixed Corner Category Dropdown -->
   <div class="category-dropdown-container">
       <select id="cornerCategoryDropdown" class="category-dropdown" onchange="scrollToCategory(this.value)">
-          <option value="">📂 Categories</option>
+          <option value="">Menu 📖</option>
       </select>
   </div>
 
