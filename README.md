@@ -110,7 +110,6 @@
         if (targetElement) {
             targetElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
-        // Reset dropdown back to default title after selection
         document.getElementById('cornerCategoryDropdown').value = "";
     }
 
