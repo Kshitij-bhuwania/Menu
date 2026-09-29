@@ -54,7 +54,7 @@
   <h3>Contact Us On: 9741348438</h3>
   <div style="display: flex; justify-content: center;">
   <a href="https://maps.app.goo.gl/fFrxYmJUshYHwWUE8" style="text-decoration: none;">
-    <button type="button" style="background-color: #FF6600; color: green; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
+    <button type="button" style="background-color: #FF6600; color: #43C600; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
       Locate Us
     </button>
   </a>
