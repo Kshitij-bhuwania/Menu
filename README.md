@@ -51,8 +51,10 @@
       <img src="https://i.postimg.cc/SsSZBQ9q/1000037254-removebg-preview.png" alt="Description" style="width: 300px;">
   </div>
   <br>
-  <h2>Contact Us On: 9741348438</h2>
-  
+  <h3>Contact Us On: 9741348438</h3>
+  <a href="https://maps.app.goo.gl/fFrxYmJUshYHwWUE8">
+  <button type="button">Locate Us</button>
+  </a>
   <br><br>
   
   <div class="container" style="padding-bottom: 90px;">
