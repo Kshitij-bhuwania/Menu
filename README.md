@@ -50,7 +50,84 @@
   <div style="text-align: center; width: 100%;">
       <img src="https://i.postimg.cc/SsSZBQ9q/1000037254-removebg-preview.png" alt="Description" style="width: 300px;">
   </div>
-  <br><br><br>
+  <br>
+  <h1>Contact Us On: 9741348438</h1>
+  
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Google Map Button</title>
+    <!-- Include Google Fonts (Roboto) and FontAwesome for the pin icon -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+  <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f8f9fa;
+        }
+
+        /* Google Maps Button Styling */
+        .gmap-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background-color: #ffffff;
+            color: #3c4043;
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 10px 18px;
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 1px 3px rgba(60, 64, 67, 0.3);
+            text-decoration: none;
+            transition: all 0.2s ease-in-out;
+        }
+
+        /* Map Pin Icon styling matching Google Red */
+        .gmap-btn i {
+            color: #ea4335;
+            font-size: 16px;
+        }
+
+        /* Hover effect */
+        .gmap-btn:hover {
+            background-color: #f8f9fa;
+            box-shadow: 0 2px 6px rgba(60, 64, 67, 0.3);
+            border-color: #d2d3d6;
+        }
+
+        /* Active / Click effect */
+        .gmap-btn:active {
+            background-color: #f1f3f4;
+            box-shadow: 0 1px 2px rgba(60, 64, 67, 0.3);
+        }
+    </style>
+</head>
+<body>
+<!-- Replace 'Times+Square+New+York' with your desired location or latitude/longitude -->
+    <a href="https://www.google.com/maps/search/?api=1&query=Times+Square+New+York" 
+       target="_blank" 
+       rel="noopener noreferrer" 
+       class="gmap-btn">
+        <i class="fa-solid fa-location-dot"></i>
+        <span>View on Google Maps</span>
+    </a>
+
+</body>
+
+
+  
+  
+  
+  <br><br>
   
   <div class="container" style="padding-bottom: 90px;">
         <h2>🍽️ Restaurant Menu</h2>
